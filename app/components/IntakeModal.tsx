@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, ArrowRight } from "lucide-react";
 
@@ -24,6 +24,17 @@ export default function IntakeModal({ isOpen, onClose }: IntakeModalProps) {
     onClose();
   };
 
+  // Keyboard Escape listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        handleReset();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -40,6 +51,9 @@ export default function IntakeModal({ isOpen, onClose }: IntakeModalProps) {
 
           {/* Modal Container */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="intake-modal-title"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -49,7 +63,8 @@ export default function IntakeModal({ isOpen, onClose }: IntakeModalProps) {
             {/* Close Button */}
             <button
               onClick={handleReset}
-              className="absolute top-6 right-6 p-2 rounded-full glass-card text-[#8E9AAF] hover:text-[#F4F0E8]"
+              className="absolute top-6 right-6 p-2 rounded-full glass-card text-[#8E9AAF] hover:text-[#F4F0E8] focus:outline-none focus:ring-2 focus:ring-[#D8B477]"
+              aria-label="Close care match quiz"
             >
               <X className="w-5 h-5" />
             </button>
@@ -59,7 +74,7 @@ export default function IntakeModal({ isOpen, onClose }: IntakeModalProps) {
               <span className="text-xs uppercase tracking-wider text-[#D8B477] font-semibold">
                 Care Match Quiz • Step {step} of 3
               </span>
-              <h3 className="font-serif text-2xl text-[#F4F0E8]">
+              <h3 id="intake-modal-title" className="font-serif text-2xl text-[#F4F0E8]">
                 {step === 1 && "What brings you to Aura Mind today?"}
                 {step === 2 && "What is your preferred care format?"}
                 {step === 3 && "Your Recommended Match"}

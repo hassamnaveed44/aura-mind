@@ -10,7 +10,7 @@ export default function Specialists() {
       role: "Clinical Psychologist, PhD",
       specialties: ["Anxiety & Panic", "Burnout Recovery", "Relationships"],
       experience: "12+ Years Experience",
-      education: "Stanford University",
+      education: "Clinical Psychology Background",
       image: "/images/fedoctor2.jpg",
     },
     {
@@ -18,7 +18,7 @@ export default function Specialists() {
       role: "Board-Certified Psychiatrist, MD",
       specialties: ["Mood Disorders", "ADHD & Focus", "Bio-Care"],
       experience: "15+ Years Experience",
-      education: "Harvard Medical School",
+      education: "Psychiatric Medicine Practice",
       image: "/images/doctor1.jpg",
     },
     {
@@ -26,7 +26,7 @@ export default function Specialists() {
       role: "Licensed Family Therapist, LMFT",
       specialties: ["Trauma & PTSD", "Life Transitions", "Mindfulness"],
       experience: "10+ Years Experience",
-      education: "Columbia University",
+      education: "Systemic Family Therapy",
       image: "images/consultant.jpg",
     },
   ];

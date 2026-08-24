@@ -1,13 +1,27 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Sparkles, ShieldCheck } from "lucide-react";
 
 export default function Hero() {
   const headlineWords = ["A", "calmer", "place", "to", "begin."];
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  // Scroll Parallax logic
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.02, 0.96]);
 
   return (
-    <section className="relative w-full min-h-[90vh] flex flex-col justify-between pt-8 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-ambient-mesh">
+    <section 
+      ref={sectionRef} 
+      className="relative w-full min-h-[90vh] flex flex-col justify-between pt-8 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden bg-ambient-mesh"
+    >
       
       {/* Background Ambient Glow Spheres */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-[#6F8F78]/10 rounded-full blur-[120px] pointer-events-none" />
@@ -109,14 +123,23 @@ export default function Hero() {
 
         </div>
 
-        {/* Right Column: Hero Image with Frame Mask & Scale Reveal */}
+        {/* Right Column: Hero Image with Scroll Parallax & Reveal Curtain */}
         <div className="lg:col-span-5 relative">
           <motion.div
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
+            style={{ y: imageY, scale: imageScale }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.0, delay: 0.4 }}
             className="relative w-full aspect-[4/5] sm:aspect-[4/4] lg:aspect-[4/5] rounded-3xl overflow-hidden glass-card p-3 border border-white/10 group"
           >
+            {/* Curtain Reveal Overlay */}
+            <motion.div
+              initial={{ x: "0%" }}
+              animate={{ x: "100%" }}
+              transition={{ duration: 0.9, delay: 0.5, ease: [0.77, 0, 0.175, 1] }}
+              className="absolute inset-0 bg-[#11151C] z-30 pointer-events-none rounded-2xl"
+            />
+
             {/* Image Overlay Gradient */}
             <div className="absolute inset-3 rounded-2xl bg-gradient-to-t from-[#080A0F] via-transparent to-transparent z-10 pointer-events-none opacity-80" />
             
@@ -131,7 +154,7 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.0 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
               className="absolute bottom-8 left-8 right-8 z-20 glass-card p-4 rounded-2xl border border-white/15 backdrop-blur-xl"
             >
               <p className="text-xs uppercase tracking-widest text-[#D8B477] font-semibold mb-1">

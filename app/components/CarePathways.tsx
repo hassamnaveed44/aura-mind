@@ -18,7 +18,7 @@ export default function CarePathways() {
       title: "Psychiatry & Bio-Care",
       subtitle: "Medical & Neuro-Evaluation",
       description: "Comprehensive medical evaluations and conservative medication management guided by board-certified psychiatric physicians.",
-      features: ["Medical & Bio-Metric Intake", "Targeted Pharmacotherapy", "TMS & Innovative Options"],
+      features: ["Medical & Bio-Metric Intake", "Medication Support & Guidance", "Specialist-Led Care Planning"],
       tag: "Doctor Managed",
     },
     {

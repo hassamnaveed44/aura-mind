@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Play, Pause, Wind } from "lucide-react";
 
 interface Mode {
@@ -48,6 +48,7 @@ export default function BreathingMoment() {
   const [activeMode, setActiveMode] = useState<Mode>(breathingModes[0]);
   const [isActive, setIsActive] = useState(false);
   const [phase, setPhase] = useState<"Inhale" | "Hold" | "Exhale">("Inhale");
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -124,11 +125,11 @@ export default function BreathingMoment() {
           {/* Outer Wave */}
           <motion.div
             animate={{
-              scale: isActive ? (phase === "Inhale" ? 1.35 : phase === "Hold" ? 1.35 : 0.85) : 1,
+              scale: shouldReduceMotion ? 1 : (isActive ? (phase === "Inhale" ? 1.35 : phase === "Hold" ? 1.35 : 0.85) : 1),
               opacity: isActive ? (phase === "Hold" ? 0.8 : 0.4) : 0.3,
             }}
             transition={{
-              duration: phase === "Inhale" ? activeMode.inhale : phase === "Exhale" ? activeMode.exhale : 0.5,
+              duration: shouldReduceMotion ? 0.2 : (phase === "Inhale" ? activeMode.inhale : phase === "Exhale" ? activeMode.exhale : 0.5),
               ease: "easeInOut",
             }}
             className="absolute inset-0 rounded-full border border-white/20 blur-sm"
@@ -138,10 +139,10 @@ export default function BreathingMoment() {
           {/* Middle Fluid Glow */}
           <motion.div
             animate={{
-              scale: isActive ? (phase === "Inhale" ? 1.25 : phase === "Hold" ? 1.25 : 0.9) : 1,
+              scale: shouldReduceMotion ? 1 : (isActive ? (phase === "Inhale" ? 1.25 : phase === "Hold" ? 1.25 : 0.9) : 1),
             }}
             transition={{
-              duration: phase === "Inhale" ? activeMode.inhale : phase === "Exhale" ? activeMode.exhale : 0.5,
+              duration: shouldReduceMotion ? 0.2 : (phase === "Inhale" ? activeMode.inhale : phase === "Exhale" ? activeMode.exhale : 0.5),
               ease: "easeInOut",
             }}
             className="w-44 h-44 sm:w-56 sm:h-56 rounded-full opacity-30 blur-md transition-colors duration-500"
@@ -156,7 +157,7 @@ export default function BreathingMoment() {
 
             <button
               onClick={() => setIsActive(!isActive)}
-              className="p-3.5 rounded-full text-[#F4F0E8] hover:scale-110 transition-transform shadow-lg"
+              className="p-3.5 rounded-full text-[#F4F0E8] hover:scale-110 transition-transform shadow-lg focus:outline-none focus:ring-2 focus:ring-[#D8B477]"
               style={{ backgroundColor: activeMode.color }}
               aria-label={isActive ? "Pause Breathing Session" : "Start Breathing Session"}
             >
