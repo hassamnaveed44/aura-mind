@@ -3,6 +3,9 @@ import Hero from "@/app/components/Hero";
 import StatementSection from "./components/StatementSection";
 import StatesExplorer from "./components/StatesExplorer";
 import CarePathways from "./components/CarePathways";
+import Specialists from "./components/Specialists";
+import Journal from "./components/Journal";
+import Testimonials from "./components/Testimonials";
 
 export default function Home() {
   return (
@@ -12,6 +15,9 @@ export default function Home() {
       <StatementSection />
       <StatesExplorer />
       <CarePathways />
+      <Specialists />
+      <Journal />
+      <Testimonials />
     </main>
   );
 }
