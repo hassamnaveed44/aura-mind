@@ -1,12 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight, Volume2, VolumeX } from "lucide-react";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const toggleSound = () => {
+    if (!audioRef.current) {
+      // Create audio element targeting /ambient.mp3 in public folder
+      const audio = new Audio("/ambient.mp3");
+      audio.loop = true;
+      audio.volume = 0.5; // Set comfortable volume level
+      audioRef.current = audio;
+    }
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch(() => {
+        // Fallback if browser blocks autoplay
+        setIsPlaying(false);
+      });
+    }
+  };
 
   const navLinks = [
     { name: "Philosophy", href: "#philosophy" },
@@ -43,54 +66,52 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Action Controls (Desktop) */}
+        {/* Action Controls */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Ambient Sound Toggle */}
           <button
-            onClick={() => setIsMuted(!isMuted)}
-            className="p-2.5 rounded-full glass-card text-[#8E9AAF] hover:text-[#F4F0E8] hover:border-white/20 transition-all"
-            title={isMuted ? "Unmute Ambient Sound" : "Mute Ambient Sound"}
+            onClick={toggleSound}
+            className={`p-2.5 rounded-full glass-card transition-all ${
+              isPlaying ? "text-[#6F8F78] border-[#6F8F78] shadow-lg shadow-[#6F8F78]/20" : "text-[#8E9AAF] hover:text-[#F4F0E8]"
+            }`}
+            title={isPlaying ? "Mute Ambient Sound" : "Play Ambient Sound"}
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#6F8F78]" />}
+            {!isPlaying ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#6F8F78] animate-pulse" />}
           </button>
 
-          {/* Primary CTA Button */}
           <a
             href="#cta"
-            className="group px-5 py-2.5 rounded-full bg-[#6F8F78] hover:bg-[#5E7D67] text-[#F4F0E8] text-sm font-semibold flex items-center gap-2 transition-all duration-300 shadow-lg shadow-[#6F8F78]/20 hover:shadow-[#6F8F78]/30 hover:scale-[1.02]"
+            className="group px-5 py-2.5 rounded-full bg-[#6F8F78] hover:bg-[#5E7D67] text-[#F4F0E8] text-sm font-semibold flex items-center gap-2 transition-all duration-300 shadow-lg shadow-[#6F8F78]/20 hover:scale-[1.02]"
           >
             <span>Find Your Path</span>
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
         </div>
 
-        {/* Mobile Hamburger Toggle Button */}
+        {/* Mobile Toggle */}
         <div className="flex md:hidden items-center gap-3">
           <button
-            onClick={() => setIsMuted(!isMuted)}
+            onClick={toggleSound}
             className="p-2 rounded-full glass-card text-[#8E9AAF]"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#6F8F78]" />}
+            {!isPlaying ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-[#6F8F78]" />}
           </button>
           
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2.5 rounded-xl glass-card text-[#F4F0E8] focus:outline-none"
-            aria-label="Toggle Mobile Menu"
+            className="p-2.5 rounded-xl glass-card text-[#F4F0E8]"
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden border-b border-white/10 bg-[#080A0F]/95 backdrop-blur-xl px-6 py-6 space-y-4"
           >
             {navLinks.map((link) => (
@@ -98,7 +119,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block text-lg font-medium text-[#8E9AAF] hover:text-[#F4F0E8] transition-colors py-2 border-b border-white/5"
+                className="block text-lg font-medium text-[#8E9AAF] hover:text-[#F4F0E8] py-2 border-b border-white/5"
               >
                 {link.name}
               </a>
@@ -107,7 +128,7 @@ export default function Navbar() {
               <a
                 href="#cta"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full py-3 rounded-xl bg-[#6F8F78] text-[#F4F0E8] text-center font-medium flex items-center justify-center gap-2 shadow-lg"
+                className="w-full py-3 rounded-xl bg-[#6F8F78] text-[#F4F0E8] text-center font-medium flex items-center justify-center gap-2"
               >
                 <span>Find Your Path</span>
                 <ArrowUpRight className="w-4 h-4" />
