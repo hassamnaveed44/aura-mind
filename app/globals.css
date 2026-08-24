@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-obsidian: #080a0f;
+    --surface-slate: #11151c;
+    --accent-sage: #6f8f78;
+    --accent-amber: #d8b477;
+    --text-linen: #f4f0e8;
+    --text-muted: #8e9aaf;
+  }
+
+  body {
+    background-color: var(--bg-obsidian);
+    color: var(--text-linen);
+    font-family: var(--font-sans), sans-serif;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #080a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #11151c;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6f8f78;
+}
+
+/* Ambient Radial Mesh */
+.bg-ambient-mesh {
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(111, 143, 120, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 85% 60%, rgba(216, 180, 119, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(17, 21, 28, 0.8) 0%, transparent 60%);
+}
+
+/* Glass Card Token */
+.glass-card {
+  background: rgba(17, 21, 28, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
